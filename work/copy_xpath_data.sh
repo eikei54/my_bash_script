@@ -3,13 +3,11 @@
 # Copyright (c) 2019 Akihiro Kamimura <Akihiro.Kamimura@wdc.com>
 # All rights reserved.
 
-
 #
 # Editable Part
 #
 
 LOCAL_DIR_PATH="/d/work/FA"
-PREFIX_JIRA_NO="CCB8-"$1
 
 #
 # Bash Console Color Config
@@ -52,14 +50,21 @@ do
 done
 shift $(($OPTIND - 1))
 
-SOURCE_PATH=$2
 
 # check the number of arguments
 if [ $# -ne 2 ]; then
     echo "parameter number; $#" 1>&2
     echo "paramter nums to be 2" 1>&2
+    echo "<JIRA Number> <path>" 1>&2
+    echo "<number> JIRA number" 1>&2
+    echo "<path>   the path for saving logs" 1>&2
     exit 1
 fi
+
+
+SOURCE_PATH=$1
+PREFIX_JIRA_NO=$2
+
 
 #
 # Get Folder name, like "Error_000_ERR_COMMAND_TIMEOUT"
@@ -142,7 +147,9 @@ fi
 #
 pushd $TARGET_PATH
 
+#
 # open TARGET_PATH folder
+#
 
 echo "Open Local Dir: $TARGET_PATH"
 start $TARGET_PATH
@@ -151,6 +158,19 @@ start $TARGET_PATH
 find ./ -name "*.txt.bz2" | xargs -i bzip2 -d {}
 
 
-for file in `ls $TARGET_PATH/*.txt`; do
-    echo "${file}"
-done
+#
+# split ETM file which size is over 800MB
+#
+
+#SIZE_THRESHOLD=800000000
+#PATH_SP_ETM=`which sp_etm.sh`
+#
+#for file in `ls $TARGET_PATH/*.txt`; do
+##    echo "${file}"
+#    filesize=`wc -c < ${file}`
+#    if [ $filesize -ge $SIZE_THRESHOLD ]; then
+#        #echo "${file}"
+#        source $PATH_SP_ETM ${file}
+#    fi
+#done
+
